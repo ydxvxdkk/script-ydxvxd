@@ -1,3 +1,17 @@
+local key = getfenv().SCRIPT_KEY
+local HttpService = game:GetService("HttpService")
+local player = game.Players.LocalPlayer
+local hwid = player.UserId .. "_" .. tostring(game.PlaceId)
+local webhookUrl = "https://d0458709b027.ngrok-free.app/verify"
+local data = { key = key, hwid = hwid }
+local success, response = pcall(function()
+    return HttpService:PostAsync(webhookUrl, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
+end)
+if not (success and response == "valid") then
+    player:Kick("Key inválida ou HWID não autorizado.")
+    return
+end
+
 local Players        = game:GetService("Players")
 local RunService     = game:GetService("RunService")
 local UIS            = game:GetService("UserInputService")
